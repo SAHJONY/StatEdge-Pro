@@ -1,0 +1,87 @@
+version: '3.8'
+
+services:
+  statedge-pro:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_ENV=development
+      - APP_HOST=0.0.0.0
+      - APP_PORT=8000
+      - APP_SECRET_KEY=your-secret-key-here
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=statedge_pro
+      - DB_USER=postgres
+      - DB_PASSWORD=your-password-here
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=your-redis-password-here
+      - OPENAI_API_KEY=your-openai-key-here
+      - ANTHROPIC_API_KEY=your-anthropic-key-here
+      - CHROMA_HOST=chromadb
+      - CHROMA_PORT=8000
+      - AWS_ACCESS_KEY_ID=your-aws-key-here
+      - AWS_SECRET_ACCESS_KEY=your-aws-secret-here
+      - LOG_LEVEL=INFO
+      - LOG_FORMAT=json
+      - CORS_ORIGINS=http://localhost:3000,https://statedge-pro.com
+      - EMAIL_HOST=smtp.gmail.com
+      - EMAIL_PORT=587
+      - EMAIL_USER=your-email@gmail.com
+      - EMAIL_PASSWORD=your-email-password-here
+    volumes:
+      - ./src:/app/src
+      - ./data/chroma:/app/data/chroma
+    depends_on:
+      - db
+      - redis
+      - chromadb
+    restart: unless-stopped
+
+  db:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=statedge_pro
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=your-password-here
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_PASSWORD=your-redis-password-here
+    volumes:
+      - ./data/redis:/data
+    restart: unless-stopped
+
+  chromadb:
+    image: chromadb/chroma:latest
+    ports:
+      - "8000:8000"
+    environment:
+      - CHROMA_DB_ENGINE=sqlite
+      - CHROMA_PERSIST_DIRECTORY=/app/data/chroma
+    volumes:
+      - ./data/chroma:/app/data/chroma
+    restart: unless-stopped
+
+  # Optional: Add a web interface for development
+  # web:
+  #   build: ./web
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - REACT_APP_API_URL=http://localhost:8000/api/v1
+  #   volumes:
+  #     - ./web:/app
+  #   depends_on:
+  #     - statedge-pro
+  #   restart: unless-stopped

@@ -1,0 +1,41 @@
+# Development dependencies for StatEdge Pro
+
+# Testing
+pytest==7.4.3
+pytest-cov==4.1.0
+pytest-mock==3.12.0
+
+# Linting and formatting
+ruff==0.1.8
+black==23.12.1
+isort==5.13.2
+
+# Type checking
+mypy==1.7.1
+
+# Pre-commit hooks
+pre-commit==3.6.2
+
+# Documentation
+sphinx==7.2.6
+sphinx-rtd-theme==1.3.0
+
+# Database tools
+psycopg2-binary==2.9.9
+sqlalchemy==2.0.23
+
+# Development server
+uvicorn==0.29.0
+fastapi==0.110.0
+
+# Environment management
+dotenv-cli==4.1.0
+
+# Docker
+docker==7.0.0
+
+# HTTP testing
+httpx==0.26.0
+
+# API client generation
+openapi-generator-cli==6.6.0
